@@ -1,14 +1,19 @@
 
 const Jimp = require('jimp');
 const inquirer = require('inquirer');
+const fs = require('fs');
+
 
 const addTextWatermarkToImage = async function(inputFile, outputFile, text) {
   const image = await Jimp.read(inputFile);
   const font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
+  //const font = await Jimp.loadFont('./fonts/Amsterdam Four_ttf 400.ttf');
+
   const textData = {
     text: text,
     alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
     alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE,
+    //font: 'Amsterdam Four',
   };
 
   image.print(font, 0, 0, textData, image.getWidth(), image.getHeight());
@@ -57,12 +62,21 @@ const startApp = async () => {
     choices: ['Text watermark', 'Image watermark'],
   }]);
 
+
+
   if(options.watermarkType === 'Text watermark') {
     const text = await inquirer.prompt([{
       name: 'value',
       type: 'input',
       message: 'Type your watermark text:',
     }])
+
+    const existFile = fs.existsSync('./img/' + options.inputImage,);
+    if(!existFile) {
+      console.log('File doesnt exist');
+      return
+    }
+
     options.watermarkText = text.value;
     addTextWatermarkToImage('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage), options.watermarkText);
   }
@@ -73,6 +87,21 @@ const startApp = async () => {
       message: 'Type your watermark name:',
       default: 'logo.png',
     }])
+
+    const existFile = fs.existsSync('./img/' + options.inputImage,);
+    const existWatermark = fs.existsSync('./img/' + image.filename);
+
+    if (!existFile || !existWatermark) {
+      if (!existFile) {
+        console.log('File doesnt exist');
+      }
+      if (!existWatermark) {
+        console.log('Watermark doesnt exist');
+      }
+      return
+    }
+
+
     options.watermarkImage = image.filename;
     addImageWatermarkToImage('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage), './img/' + options.watermarkImage);
   }
