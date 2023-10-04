@@ -1,0 +1,12 @@
+{
+  "name": "watermark",
+  "version": "1.0.0",
+  "description": "sdd watermatk to img",
+  "main": "index.js",
+  "author": "marcin draus",
+  "license": "MIT",
+  "dependencies": {
+    "inquirer": "6.5.0",
+    "jimp": "0.6.4"
+  }
+}
