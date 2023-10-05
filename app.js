@@ -5,6 +5,7 @@ const fs = require('fs');
 
 
 const addTextWatermarkToImage = async function(inputFile, outputFile, text) {
+  try {
   const image = await Jimp.read(inputFile);
   const font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
   //const font = await Jimp.loadFont('./fonts/Amsterdam Four_ttf 400.ttf');
@@ -21,6 +22,11 @@ const addTextWatermarkToImage = async function(inputFile, outputFile, text) {
 
   console.log('Text watermark added successfully');
   startApp();
+} catch (error) {
+  console.error('Something went wrong... Try again!');
+  startApp();
+}
+
 };
 
 const addImageWatermarkToImage = async function(inputFile, outputFile, watermarkFile) {
